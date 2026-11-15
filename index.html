@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101713">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FIT TRACK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>FIT TRACK</title>
+<style>
+:root{--bg:#101713;--panel:#19231d;--panel2:#202d25;--text:#f4f7f4;--muted:#a6b3aa;--green:#8ce0a4;--green2:#2c9d59;--line:#314238;--orange:#ffca75}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 16px calc(84px + env(safe-area-inset-bottom));}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 2px 20px} .brand{font-weight:900;letter-spacing:2px;font-size:20px}.brand span{color:var(--green)}.sub{color:var(--muted);font-size:12px;margin-top:4px}
+h1{font-size:28px;margin:8px 0 5px}h2{font-size:19px;margin:0 0 14px}h3{font-size:16px;margin:0 0 7px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:17px;margin:14px 0}
+.hero{background:linear-gradient(135deg,#203c2b,#17251c);border:1px solid #355c42;border-radius:22px;padding:20px;margin-top:16px}
+.kicker{font-size:11px;letter-spacing:1.4px;color:var(--green);font-weight:800}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+button{border:0;border-radius:14px;padding:14px 16px;font-weight:800;font-size:15px;background:var(--green);color:#102016;cursor:pointer}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+button:disabled{opacity:.4}.full{width:100%}.row{display:flex;gap:9px;align-items:center}.between{justify-content:space-between}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.stat{background:var(--panel2);padding:12px;border-radius:14px}.stat b{display:block;font-size:20px;margin-bottom:3px}
+.exercise{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border:0}
+.pill{font-size:11px;color:var(--green);background:#263c2d;padding:6px 9px;border-radius:99px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#111a14ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:9px 12px calc(9px + env(safe-area-inset-bottom));z-index:5}
+nav button{background:transparent;color:var(--muted);padding:8px 4px;font-size:12px}nav button.active{color:var(--green)}
+.page{display:none}.page.active{display:block}
+.timerbox{text-align:center;padding:25px 12px}.phase{color:var(--green);font-size:12px;letter-spacing:2px;font-weight:900}.time{font-size:76px;font-weight:800;letter-spacing:-3px;font-variant-numeric:tabular-nums;margin:12px 0}.track{height:7px;background:#344238;border-radius:9px;overflow:hidden;margin:20px 0}.track>div{height:100%;background:var(--green);width:0%}
+.exercise-name{font-size:25px;font-weight:800;margin:12px 0}.counter{color:var(--muted);font-size:13px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.controls button:first-child{grid-column:1/-1}
+label{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:13px;font-size:16px}
+.hidden{display:none!important}.notice{font-size:12px;color:var(--orange);line-height:1.45}.bar{height:8px;background:#344238;border-radius:9px;overflow:hidden}.bar>div{height:100%;background:var(--green2)}
+</style>
+</head>
+<body>
+<header><div><div class="brand">FIT <span>TRACK</span></div><div class="sub">Твой тренировочный ритм</div></div><div class="pill">MVP · 0.1</div></header>
+
+<section id="home" class="page active">
+ <div class="kicker">ТВОЯ ПРОГРАММА</div><h1>Тренируйся<br>системно.</h1><p class="muted">Выполняй упражнения, следуй таймеру и отслеживай прогресс.</p>
+ <div class="hero">
+  <div class="kicker">СЛЕДУЮЩАЯ ТРЕНИРОВКА</div><h2 style="font-size:23px;margin:9px 0">День 1 · Демонстрационная</h2>
+  <p class="muted" style="font-size:13px">6 упражнений · 3 подхода · 40 сек работа / 60 сек отдых</p>
+  <button class="full" onclick="startWorkout()">Начать тренировку →</button>
+ </div>
+ <div class="statgrid">
+  <div class="stat"><b id="homeSessions">0</b><span class="small">Тренировок</span></div>
+  <div class="stat"><b id="homeMinutes">0</b><span class="small">Минут</span></div>
+  <div class="stat"><b id="homeKcal">0</b><span class="small">Ккал*</span></div>
+ </div>
+ <div class="card"><h2>Как это работает</h2><p class="muted" style="font-size:13px;line-height:1.55;margin-bottom:0">Таймер автоматически переключает рабочий интервал и отдых. После занятия результат сохраняется в истории на этом устройстве.</p></div>
+ <p class="notice">* Калории — ориентировочная оценка. Для более точного расчёта укажи массу тела в настройках.</p>
+</section>
+
+<section id="workout" class="page">
+ <div class="row between"><span class="kicker">ТРЕНИРОВКА · ДЕНЬ 1</span><span class="pill" id="stepPill">1 / 18</span></div>
+ <div class="card">
+  <div class="counter" id="exerciseCounter">Упражнение 1 из 6 · Подход 1 из 3</div>
+  <div class="exercise-name" id="exerciseName">Приседания</div>
+  <p class="muted" id="exerciseHint" style="font-size:13px">Демонстрационное упражнение</p>
+  <div class="timerbox">
+   <div class="phase" id="phase">РАБОТА</div><div class="time" id="clock">00:40</div>
+   <div class="track"><div id="progress"></div></div>
+   <div class="counter" id="phaseHint">Выполняй упражнение в комфортном темпе</div>
+  </div>
+  <div class="controls">
+   <button id="mainBtn" onclick="toggleTimer()">Начать</button>
+   <button class="secondary" onclick="skipStep()">Пропустить этап</button>
+   <button class="ghost" onclick="endEarly()">Завершить</button>
+  </div>
+ </div>
+ <div class="card"><div class="row between"><h3>План тренировки</h3><span class="small">40 / 60 сек</span></div><div id="planList"></div></div>
+</section>
+
+<section id="progressPage" class="page">
+ <div class="kicker">ТВОЯ ДИНАМИКА</div><h1>Прогресс</h1>
+ <div class="statgrid">
+  <div class="stat"><b id="pSessions">0</b><span class="small">Занятий</span></div>
+  <div class="stat"><b id="pMinutes">0</b><span class="small">Минут</span></div>
+  <div class="stat"><b id="pKcal">0</b><span class="small">Ккал*</span></div>
+ </div>
+ <div class="card"><h2>История тренировок</h2><div id="history"><p class="muted">Пока нет завершённых тренировок.</p></div></div>
+ <div class="card"><h2>Настройки расчёта</h2><label for="weight">Масса тела, кг</label><input id="weight" type="number" min="30" max="250" placeholder="Укажи массу тела"><p class="small">Оценка калорий рассчитывается приблизительно по длительности, массе тела и усреднённой интенсивности. Это не медицинское измерение.</p><button class="secondary full" onclick="saveWeight()">Сохранить</button></div>
+</section>
+
+<nav>
+ <button id="navHome" class="active" onclick="showPage('home')">⌂<br>Главная</button>
+ <button id="navWorkout" onclick="showPage('workout')">◉<br>Тренировка</button>
+ <button id="navProgressPage" onclick="showPage('progressPage')">▥<br>Прогресс</button>
+</nav>
+<script>
+const workout=[
+ {name:"Приседания",hint:"Контролируй движение и сохраняй устойчивое положение"},
+ {name:"Отжимания от опоры",hint:"Выбери безопасную высоту опоры"},
+ {name:"Тяга гантелей в наклоне",hint:"Сохраняй нейтральное положение спины"},
+ {name:"Ягодичный мост",hint:"Поднимай таз без переразгибания поясницы"},
+ {name:"Жим гантелей сидя",hint:"Работай в комфортной амплитуде"},
+ {name:"Планка",hint:"Сохраняй ровное положение корпуса"}
+];
+const workSeconds=40, restSeconds=60, sets=3;
+let sequence=[],index=0,remaining=workSeconds,total=workSeconds,running=false,interval=null,lastTick=0,phase="work",startedAt=0,elapsedBefore=0;
+let completedSteps=0;
+const $=id=>document.getElementById(id);
+function buildSequence(){sequence=[];workout.forEach((e,i)=>{for(let s=1;s<=sets;s++){sequence.push({exercise:i,set:s,phase:"work",duration:workSeconds});if(!(i===workout.length-1&&s===sets))sequence.push({exercise:i,set:s,phase:"rest",duration:restSeconds})}})}
+function showPage(id){if(id==="workout"&&!sequence.length)buildSequence();document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));({home:"navHome",workout:"navWorkout",progressPage:"navProgressPage"}[id]&&$(({home:"navHome",workout:"navWorkout",progressPage:"navProgressPage"}[id])).classList.add("active"));renderStats()}
+function startWorkout(){buildSequence();index=0;completedSteps=0;phase="work";remaining=workSeconds;total=workSeconds;elapsedBefore=0;startedAt=Date.now();running=false;renderStep();showPage("workout")}
+function renderStep(){
+ if(index>=sequence.length){finishWorkout();return}
+ const s=sequence[index],e=workout[s.exercise];phase=s.phase;remaining=s.duration;total=s.duration;
+ $("exerciseCounter").textContent=`Упражнение ${s.exercise+1} из ${workout.length} · Подход ${s.set} из ${sets}`;
+ $("exerciseName").textContent=e.name;$("exerciseHint").textContent=e.hint;
+ $("phase").textContent=phase==="work"?"РАБОТА":"ОТДЫХ";
+ $("phaseHint").textContent=phase==="work"?"Выполняй упражнение в комфортном темпе":"Восстанови дыхание и приготовься к следующему подходу";
+ $("stepPill").textContent=`${index+1} / ${sequence.length}`;
+ $("mainBtn").textContent="Начать";updateClock();renderPlan();
+}
+function updateClock(){$("clock").textContent=`${String(Math.floor(remaining/60)).padStart(2,"0")}:${String(Math.max(0,Math.ceil(remaining%60))).padStart(2,"0")}`;$("progress").style.width=((1-remaining/total)*100)+"%"}
+function toggleTimer(){if(running){pauseTimer();return}running=true;$("mainBtn").textContent="Пауза";lastTick=Date.now();interval=setInterval(tick,200)}
+function pauseTimer(){running=false;clearInterval(interval);interval=null;$("mainBtn").textContent="Продолжить"}
+function tick(){if(!running)return;const now=Date.now();const delta=(now-lastTick)/1000;lastTick=now;remaining-=delta;if(remaining<=0){remaining=0;updateClock();advance();}else updateClock()}
+function advance(){if(phase==="work")completedSteps++;index++;if(index>=sequence.length){finishWorkout();return}renderStep();if(running){lastTick=Date.now();$("mainBtn").textContent="Пауза"}}
+function skipStep(){if(running)pauseTimer();advance()}
+function endEarly(){if(confirm("Завершить тренировку сейчас? Сохраним фактически пройденное время.")){finishWorkout(true)}}
+function finishWorkout(early=false){pauseTimer();const seconds=Math.max(0,Math.round((Date.now()-startedAt)/1000));const w=Number(localStorage.getItem("fit_weight")||0);const kcal=w?Math.round((seconds/3600)*w*5):0;const logs=JSON.parse(localStorage.getItem("fit_logs")||"[]");logs.unshift({date:new Date().toISOString(),seconds,kcal,completed:completedSteps,full:!early&&index>=sequence.length});localStorage.setItem("fit_logs",JSON.stringify(logs));alert(`Тренировка ${early?"завершена":"выполнена"}!\\nВремя: ${Math.round(seconds/60)} мин\\nОценка: ${kcal? kcal+" ккал":"укажи массу тела для оценки калорий"}`);sequence=[];showPage("progressPage")}
+function renderPlan(){$("planList").innerHTML=workout.map((e,i)=>`<div class="exercise"><div><b>${i+1}. ${e.name}</b><div class="small">${sets} подхода</div></div><span class="pill">40 сек</span></div>`).join("")}
+function renderStats(){const logs=JSON.parse(localStorage.getItem("fit_logs")||"[]");const sessions=logs.length,seconds=logs.reduce((a,x)=>a+x.seconds,0),kcal=logs.reduce((a,x)=>a+x.kcal,0);$("homeSessions").textContent=sessions;$("homeMinutes").textContent=Math.round(seconds/60);$("homeKcal").textContent=kcal;$("pSessions").textContent=sessions;$("pMinutes").textContent=Math.round(seconds/60);$("pKcal").textContent=kcal;$("weight").value=localStorage.getItem("fit_weight")||"";$("history").innerHTML=logs.length?logs.map(x=>`<div class="exercise"><div><b>${new Date(x.date).toLocaleDateString("ru-RU")}</b><div class="small">${Math.round(x.seconds/60)} мин · ${x.full?"Полностью":"Частично"}</div></div><span class="pill">${x.kcal?x.kcal+" ккал":"—"}</span></div>`).join(""):'<p class="muted">Пока нет завершённых тренировок.</p>'}
+function saveWeight(){const v=Number($("weight").value);if(v<30||v>250){alert("Укажи массу тела от 30 до 250 кг.");return}localStorage.setItem("fit_weight",v);alert("Масса тела сохранена.");renderStats()}
+document.addEventListener("visibilitychange",()=>{if(running){const now=Date.now();const delta=(now-lastTick)/1000;lastTick=now;remaining-=delta;if(remaining<=0){remaining=0;updateClock();advance()}else updateClock()}});
+buildSequence();renderStats();renderPlan();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+</script>
+</body></html>
